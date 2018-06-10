@@ -6,7 +6,7 @@ from car.serializers import UserSerializer, UserLoginSerializer, APIUserSerializ
 from rest_framework import  generics, mixins
 
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 
@@ -17,7 +17,8 @@ class UserView(generics.CreateAPIView):
     serializer_class    = APIUserSerializer
     queryset            = User.objects.all()
     permission_classes  = [AllowAny]
-#Check
+
+#Login
 class UserLoginApiView(APIView):
     permission_classes  = [AllowAny]
     serializer_class    = UserLoginSerializer
@@ -30,6 +31,17 @@ class UserLoginApiView(APIView):
             return Response(new_data, status=HTTP_200_OK)
         return Response(serializer.erros, status=HTTP_400_BAD_REQUEST)
 
+# Login Check
+class UserLoginCheckAPIView(APIView):
+    def get(self, request, format=None):
+        """
+            Check Actual Token
+        """
+        if request.user.is_authenticated:
+            return Response({'success':'logged'}, status=HTTP_200_OK)
+ 
+        return Response({'error':'Not logged'}, status=HTTP_403_FORBIDDEN)
+        
 
 # Car pooling User
 class UserAPIView(mixins.CreateModelMixin, generics.ListAPIView):
@@ -52,7 +64,6 @@ class UserAPIView(mixins.CreateModelMixin, generics.ListAPIView):
 class UserRudView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field           = 'user_pk'
     serializer_class       = UserSerializer
-    permission_classes     = [IsOwnerOrReadOnly]
 
     def get_queryset(self):
         return Users.objects.all()
