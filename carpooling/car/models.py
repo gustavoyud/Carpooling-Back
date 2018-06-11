@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from django.contrib.auth.models import User
 from rest_framework import reverse
 
 # Created By: Gustavo Yud
@@ -11,7 +11,6 @@ from rest_framework import reverse
 class Users(models.Model):
     user_pk         = models.AutoField(primary_key=True)
     name            = models.CharField(max_length=30)
-    email           = models.EmailField(null=True, blank=True)
     geral_register  = models.IntegerField()
     address         = models.CharField(max_length=100)
     complement      = models.CharField(max_length=200)
@@ -21,18 +20,16 @@ class Users(models.Model):
     federal_unit    = models.CharField(max_length = 3)
     phone           = models.IntegerField()
     celphone        = models.IntegerField()
-    username        = models.CharField(max_length=200)
+    user            = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
-        verbose_name = u'username'
-        verbose_name_plural = u'usernames'
+        verbose_name = u'user'
+        verbose_name_plural = u'users'
     
     def __str__(self):
-        return self.username
+        return str(self.user)
     
     @property
     def owner(self):
-        return self.username
+        return str(self.user)
     
-    def get_api_url(self):
-        return reverse("user-rud", kwargs={'user_pk': self.user_pk})

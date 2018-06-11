@@ -2,13 +2,13 @@ from django.db.models import Q
 from .permissions import IsOwnerOrReadOnly
 from django.contrib.auth.models import User
 from .models import Users
-from car.serializers import UserSerializer, UserLoginSerializer, APIUserSerializer
+from car.serializers import UserSerializer, UserLoginSerializer, APIUserSerializer, UsersSerializer
 from rest_framework import  generics, mixins
 
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 #Django User
 
@@ -31,6 +31,12 @@ class UserLoginApiView(APIView):
             return Response(new_data, status=HTTP_200_OK)
         return Response(serializer.erros, status=HTTP_400_BAD_REQUEST)
 
+class UserDetail(generics.RetrieveAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (IsAuthenticated,)
+
+
 # Login Check
 class UserLoginCheckAPIView(APIView):
     def get(self, request, format=None):
@@ -46,24 +52,21 @@ class UserLoginCheckAPIView(APIView):
 # Car pooling User
 class UserAPIView(mixins.CreateModelMixin, generics.ListAPIView):
     lookup_field           = 'user_pk'
-    serializer_class       = UserSerializer
+    serializer_class       = UsersSerializer
 
     def get_queryset(self):
         qs = Users.objects.all()
-        query = self.request.GET.get('username')
+        query = self.request.GET.get('q')
         if query is not None:
-            qs = qs.filter(Q(username__icontains=query)).distinct()
+            qs = qs.filter(Q(name__icontains=query)).distinct()
         return qs
-    
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
     
     def post(self, request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
 
 class UserRudView(generics.RetrieveUpdateDestroyAPIView):
     lookup_field           = 'user_pk'
-    serializer_class       = UserSerializer
+    serializer_class       = UsersSerializer
 
     def get_queryset(self):
         return Users.objects.all()
