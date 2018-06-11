@@ -12,7 +12,7 @@ from rest_framework.response import Response
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email' )
+        fields = ['url', 'username', 'email' ]
 
 
 class APIUserSerializer(ModelSerializer):
@@ -82,7 +82,8 @@ class UsersSerializer(serializers.HyperlinkedModelSerializer):
             'phone', 
             'celphone', 
             'user',
-            )
+        )
+
     
     def validate_user(self, value):
         qs = Users.objects.filter(name__iexact=value)

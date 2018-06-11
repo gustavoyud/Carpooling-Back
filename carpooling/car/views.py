@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST, HTTP_403_FORBIDDEN
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import viewsets
 
 #Django User
 
@@ -58,7 +59,7 @@ class UserAPIView(mixins.CreateModelMixin, generics.ListAPIView):
         qs = Users.objects.all()
         query = self.request.GET.get('q')
         if query is not None:
-            qs = qs.filter(Q(name__icontains=query)).distinct()
+            qs = qs.filter(Q(user__username__iexact=query)).distinct()
         return qs
     
     def post(self, request, *args, **kwargs):
@@ -70,4 +71,3 @@ class UserRudView(generics.RetrieveUpdateDestroyAPIView):
 
     def get_queryset(self):
         return Users.objects.all()
-

@@ -31,5 +31,5 @@ class Users(models.Model):
     
     @property
     def owner(self):
-        return str(self.user)
+        return self.user
     
