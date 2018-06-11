@@ -33,11 +33,11 @@ class APIUserSerializer(ModelSerializer):
 class UserLoginSerializer(ModelSerializer):
     token       = CharField(allow_blank=True, read_only=True)
     username    = CharField(required=False, allow_blank=True)
-    email       = EmailField(label='Email', required=False ,allow_blank=True)
+    url         = CharField(required=False, allow_blank=True)
 
     class Meta:
         model   = User
-        fields  = ['username', 'email', 'password','token']
+        fields  = ['username', 'password', 'token', 'url']
         extra_kwargs = {"password": {"write_only": True} }
 
     def validate(self, data):
@@ -60,9 +60,10 @@ class UserLoginSerializer(ModelSerializer):
             if not user_obj.check_password(password):
                 raise serializers.ValidationError([{'error': 'Senha Incorreta', 'field' : 'password'}])
         
+        print(user_obj)
         token, created  = Token.objects.get_or_create(user=user_obj)
         data["token"]   = token.key
-
+        data["url"]     = 'http://localhost:8000/users/detail/'+str(user_obj.id)+'/'
         return data
 
 class UsersSerializer(serializers.HyperlinkedModelSerializer):

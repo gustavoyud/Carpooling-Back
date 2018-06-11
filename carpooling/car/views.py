@@ -36,8 +36,7 @@ class UserDetail(generics.RetrieveAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
-
-
+    
 # Login Check
 class UserLoginCheckAPIView(APIView):
     def get(self, request, format=None):
