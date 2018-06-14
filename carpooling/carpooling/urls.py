@@ -18,7 +18,8 @@ from django.contrib import admin
 from rest_framework_jwt.views import obtain_jwt_token
 
 urlpatterns = [
+    url(r'^', include('car.urls')),
+    url(r'^api/', include('cars.urls'), name='cars'),
     url(r'^admin/', admin.site.urls),
     url(r'^api/token/$', obtain_jwt_token, name="api-login"),
-    url(r'^', include('car.urls')),
 ]
