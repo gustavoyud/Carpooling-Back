@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^', include('car.urls')),
     url(r'^api/', include('cars.urls'), name='cars'),
     url(r'^api/places/', include('destiny.urls'), name='destiny'),
+    url(r'^api/user/', include('schedule.urls'), name='schedule'),    
     url(r'^admin/', admin.site.urls),
     url(r'^api/token/$', obtain_jwt_token, name="api-login"),
 ]
