@@ -33,12 +33,11 @@ class APIUserSerializer(ModelSerializer):
 class UserLoginSerializer(ModelSerializer):
     token       = CharField(allow_blank=True, read_only=True)
     username    = CharField(required=False, allow_blank=True)
-    url         = CharField(required=False, allow_blank=True)
     pk          = CharField(required=False, allow_blank=True)
 
     class Meta:
         model   = User
-        fields  = ['pk', 'username', 'password', 'url', 'token']
+        fields  = ['pk', 'username', 'password',  'token']
         extra_kwargs = {"password": {"write_only": True} }
 
     def validate(self, data):
@@ -61,14 +60,13 @@ class UserLoginSerializer(ModelSerializer):
             if not user_obj.check_password(password):
                 raise serializers.ValidationError([{'error': 'Senha Incorreta', 'field' : 'password'}])
         
-        print(user_obj)
         token, created  = Token.objects.get_or_create(user=user_obj)
         data["token"]   = token.key
-        data["url"]     = 'http://localhost:8000/users/detail/'+str(user_obj.id)+'/'
         data["pk"]      = user_obj.id
         return data
 
 class UsersSerializer(serializers.HyperlinkedModelSerializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
     
     class Meta:
         model = Users
@@ -96,3 +94,38 @@ class UsersSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError('O nome de usário já existe')
         return value
 
+class userSerializerGet(serializers.HyperlinkedModelSerializer):
+        user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+        
+        class Meta:
+            model = Users
+            fields = (
+                'user_pk', 
+                'name', 
+                'geral_register', 
+                'address', 
+                'complement', 
+                'ZIP', 
+                'neighborhood', 
+                'city', 
+                'federal_unit',
+                'user',
+            )
+
+class userSerializerCreate(serializers.HyperlinkedModelSerializer):
+        user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all())
+        
+        class Meta:
+            model = Users
+            fields = (
+                'user_pk', 
+                'name', 
+                'geral_register', 
+                'address', 
+                'complement', 
+                'ZIP', 
+                'neighborhood', 
+                'city', 
+                'federal_unit',
+                'user',
+            )
