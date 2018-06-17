@@ -31,6 +31,8 @@ CORS_ORIGIN_ALLOW_ALL = True
 # Application definition
 
 INSTALLED_APPS = [
+    'user_schedule.apps.UserScheduleConfig',
+    'schedule.apps.ScheduleConfig',
     'destiny.apps.DestinyConfig',
     'car.apps.CarConfig',
     'cars.apps.CarsConfig',
