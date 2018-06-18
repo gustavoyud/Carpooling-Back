@@ -21,6 +21,15 @@ class APIUserSerializer(ModelSerializer):
         fields = ['username','email','password']
         extra_kwargs = {"password": {"write_only": True} }
     
+    def validate(self, data):
+        email = data.get("email")
+
+        qs = User.objects.filter(email=email)
+        if qs.exists() and qs.count() > 0:
+            raise serializers.ValidationError("E-mail já utilizado")
+        
+        return data
+        
     def create(self, validated_data):
         username    = validated_data['username']
         email       = validated_data['email']
@@ -29,6 +38,8 @@ class APIUserSerializer(ModelSerializer):
         user_obj.set_password(password)
         user_obj.save()
         return validated_data
+    
+
 
 class UserLoginSerializer(ModelSerializer):
     token       = CharField(allow_blank=True, read_only=True)
