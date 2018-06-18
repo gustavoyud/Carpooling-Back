@@ -1,0 +1,32 @@
+# Created by .ignore support plugin (hsz.mobi)
+### Python template
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Translations
+*.mo
+*.pot
+
+# dotenv
+.env
+
+# virtualenv
+venv/
+ENV/
+
+# celery
+celerybeat.pid
+
+# IDLE Visual Studio Code
+.vscode
+
+# db
+*.sqlite3
+
+# static media
+static/
+
+# core
+/car/migrations
