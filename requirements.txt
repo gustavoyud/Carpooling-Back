@@ -35,7 +35,7 @@ scandir==1.5
 SecretStorage==2.3.1
 six==1.10.0
 stevedore==1.28.0
-urllib3==1.19.1
+urllib3==1.26.5
 virtualenv==15.2.0
 virtualenv-clone==0.3.0
 virtualenvwrapper==4.8.2
