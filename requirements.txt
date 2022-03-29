@@ -15,7 +15,7 @@ keyrings.alt==2.2
 mysql-connector-python==2.1.6
 mysql-utilities==1.6.4
 numpy==1.12.1
-paramiko==2.0.0
+paramiko==2.10.1
 pathlib2==2.3.0
 pbr==4.0.2
 pexpect==4.2.1
